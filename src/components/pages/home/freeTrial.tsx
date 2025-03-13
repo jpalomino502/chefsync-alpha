@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import InteractiveHoverButton from "@/components/magicui/interactive-hover-button-black";
+import InteractiveHoverButton from "@/components/ui/interactive-hover-button-black";
   
 export default function FreeTrial() {
   return (

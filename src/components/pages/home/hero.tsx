@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef } from "react"
-import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button"
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
 export function Hero() {
   const containerRef = useRef(null)
 

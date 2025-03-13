@@ -1,4 +1,4 @@
-import { Header } from "@/components/pages/common/header";
+import { Header } from "@/components/common/header";
 import { Hero } from "@/components/pages/home/hero";
 import { Features } from "@/components/pages/home/features";
 import WhyChooseUs  from "@/components/pages/home/why-choose-us";

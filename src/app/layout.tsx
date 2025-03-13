@@ -3,7 +3,7 @@ import type React from "react";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/contexts/auth-context";
 import { Toaster } from "@/components/ui/toaster";
-import CustomCursor from "@/components/pages/common/CustomCursor";
+import CustomCursor from "@/components/common/CustomCursor";
 import "./globals.css";
 
 const inter = Inter({

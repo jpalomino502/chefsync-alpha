@@ -1,6 +1,6 @@
-"use client";
-import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
+"use client"
+import { useEffect, useState, useRef } from "react"
+import Link from "next/link"
 import {
   Menu,
   X,
@@ -10,33 +10,33 @@ import {
   Search,
   Settings,
   Sliders,
-  Image as LucideImage,
+  LucideImage,
   DollarSign,
   HelpCircle,
   LogOut,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { AuthModal } from "./AuthModal";
-import { cn } from "@/lib/utils";
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { AuthModal } from "./AuthModal"
+import { cn } from "@/lib/utils"
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [isScrolled, setIsScrolled] = useState(false)
 
-  const headerRef = useRef<HTMLElement>(null);
-  const profileRef = useRef<HTMLDivElement>(null);
-  const mobileUserMenuRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null)
+  const profileRef = useRef<HTMLDivElement>(null)
+  const mobileUserMenuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) setUser(JSON.parse(storedUser))
 
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+      setIsScrolled(window.scrollY > 10)
+    }
 
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -44,31 +44,37 @@ export function Header() {
         (profileRef.current && profileRef.current.contains(event.target as Node)) ||
         (mobileUserMenuRef.current && mobileUserMenuRef.current.contains(event.target as Node))
       ) {
-        return;
+        return
       }
-      setIsMenuOpen(false);
-      setIsProfileMenuOpen(false);
-    };
+      setIsMenuOpen(false)
+      setIsProfileMenuOpen(false)
+    }
 
-    window.addEventListener("scroll", handleScroll);
-    document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScroll)
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+      window.removeEventListener("scroll", handleScroll)
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    setIsProfileMenuOpen(false);
-    setIsMenuOpen(false);
-  };
+    localStorage.removeItem("user")
+    setUser(null)
+    setIsProfileMenuOpen(false)
+    setIsMenuOpen(false)
+  }
 
   const closeMenu = () => {
-    setIsMenuOpen(false);
-    setIsProfileMenuOpen(false);
-  };
+    setIsMenuOpen(false)
+    setIsProfileMenuOpen(false)
+  }
+
+  // Generar la URL del panel basada en el ID del usuario
+  const getPanelUrl = () => {
+    if (!user || !user.uid) return "/"
+    return `/user/${user.uid}/panel`
+  }
 
   return (
     <>
@@ -76,7 +82,7 @@ export function Header() {
         ref={headerRef}
         className={cn(
           "sticky top-0 z-50 w-full border-b transition-all duration-200",
-          isScrolled ? "bg-white/95 shadow-md border-transparent" : "bg-white/90 border-gray-200 shadow-sm"
+          isScrolled ? "bg-white/95 shadow-md border-transparent" : "bg-white/90 border-gray-200 shadow-sm",
         )}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex justify-between items-center h-16">
@@ -88,31 +94,19 @@ export function Header() {
             <span>ChefSync</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-8">
-            <Link
-              href="#features"
-              className="text-sm  text-black hover:text-zinc-900 relative group py-1.5"
-            >
+            <Link href="#features" className="text-sm  text-black hover:text-zinc-900 relative group py-1.5">
               Características
               <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gray-900 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-200"></span>
             </Link>
-            <Link
-              href="#showcase"
-              className="text-sm  text-black hover:text-zinc-900 relative group py-1.5"
-            >
+            <Link href="#showcase" className="text-sm  text-black hover:text-zinc-900 relative group py-1.5">
               Ejemplos
               <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gray-900 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-200"></span>
             </Link>
-            <Link
-              href="#pricing"
-              className="text-sm  text-black hover:text-zinc-900 relative group py-1.5"
-            >
+            <Link href="#pricing" className="text-sm  text-black hover:text-zinc-900 relative group py-1.5">
               Precios
               <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gray-900 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-200"></span>
             </Link>
-            <Link
-              href="#support"
-              className="text-sm  text-black hover:text-zinc-900 relative group py-1.5"
-            >
+            <Link href="#support" className="text-sm  text-black hover:text-zinc-900 relative group py-1.5">
               Soporte
               <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gray-900 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-200"></span>
             </Link>
@@ -151,7 +145,7 @@ export function Header() {
                     </div>
                     <div className="py-2">
                       <Link
-                        href="/panel"
+                        href={getPanelUrl()}
                         className="flex items-center px-4 py-2.5 text-sm text-black hover:bg-gray-50 transition-colors"
                         onClick={() => setIsProfileMenuOpen(false)}
                       >
@@ -189,20 +183,10 @@ export function Header() {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-sm "
-                  onClick={() => setIsLoginOpen(true)}
-                >
+                <Button variant="outline" size="sm" className="text-sm " onClick={() => setIsLoginOpen(true)}>
                   Iniciar sesión
                 </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="text-sm "
-                  onClick={() => setIsLoginOpen(true)}
-                >
+                <Button variant="default" size="sm" className="text-sm " onClick={() => setIsLoginOpen(true)}>
                   Registrarse
                 </Button>
               </div>
@@ -301,7 +285,7 @@ export function Header() {
           </div>
           <div className="py-2">
             <Link
-              href="/panel"
+              href={getPanelUrl()}
               className="flex items-center px-4 py-2.5 text-sm text-black hover:bg-gray-50 transition-colors"
               onClick={() => setIsProfileMenuOpen(false)}
             >
@@ -337,13 +321,10 @@ export function Header() {
         </div>
       )}
       {(isMenuOpen || isProfileMenuOpen) && (
-        <div
-          className="md:hidden fixed inset-0 bg-black/20 z-40"
-          onClick={closeMenu}
-          aria-hidden="true"
-        />
+        <div className="md:hidden fixed inset-0 bg-black/20 z-40" onClick={closeMenu} aria-hidden="true" />
       )}
       <AuthModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
     </>
-  );
+  )
 }
+
