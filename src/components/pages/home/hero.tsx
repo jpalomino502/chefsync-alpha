@@ -15,7 +15,7 @@ export function Hero() {
             </span>{" "}
             La mejor solución para tu negocio
           </h1>
-          <p className="mx-auto max-w-lg text-gray-500 md:text-xl dark:text-gray-400">
+          <p className="mx-auto max-w-lg text-zinc-800 md:text-xl">
             Optimiza la administración de tu comercio con nuestra plataforma intuitiva y poderosa.
           </p>
         </div>

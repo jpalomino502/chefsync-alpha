@@ -52,7 +52,7 @@ export default function FAQSection() {
   }
 
   return (
-    <section className="py-32 bg-black dark:bg-white" ref={ref}>
+    <section className="py-32 bg-black" ref={ref}>
       <div className="container mx-auto px-8 md:px-12 max-w-7xl">
         <motion.div
           className="text-center mb-20"
@@ -63,7 +63,7 @@ export default function FAQSection() {
           <h2 className="text-4xl md:text-5xl  tracking-tight text-white">
             Preguntas <span className="apple-gradient">Frecuentes</span>
           </h2>
-          <p className="text-xl text-gray-300 dark:text-gray-600 max-w-2xl mx-auto mt-6 font-light">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto mt-6 font-light">
             Todo lo que necesitas saber sobre ChefSync y cómo puede transformar la operación de tu restaurante.
           </p>
         </motion.div>
@@ -75,7 +75,7 @@ export default function FAQSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className={`mb-6 border-b border-gray-800 dark:border-gray-200 pb-6 ${
+              className={`mb-6 border-b border-gray-800 pb-6 ${
                 index === faqs.length - 1 ? "border-b-0" : ""
               }`}
             >
@@ -85,13 +85,13 @@ export default function FAQSection() {
                 aria-expanded={expandedIndex === index}
                 aria-controls={`faq-answer-${index}`}
               >
-                <h3 className="text-xl  text-white dark:text-black">{faq.question}</h3>
+                <h3 className="text-xl text-white">{faq.question}</h3>
                 <motion.div
                   animate={{ rotate: expandedIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                   className="flex-shrink-0 ml-4"
                 >
-                  <ChevronDown className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                  <ChevronDown className="h-5 w-5 text-gray-400" />
                 </motion.div>
               </button>
 
@@ -105,7 +105,7 @@ export default function FAQSection() {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <p className="text-gray-400 dark:text-gray-600 pb-4 font-light leading-relaxed">{faq.answer}</p>
+                    <p className="text-gray-400 pb-4 font-light leading-relaxed">{faq.answer}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
