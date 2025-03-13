@@ -17,10 +17,16 @@ export async function GET(
   }
   const commercesRef = db.collection("users").doc(userId).collection("commerces")
   const commercesSnapshot = await commercesRef.get()
-  const commerces = commercesSnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }))
+  const commerces = commercesSnapshot.docs.map((doc) => {
+    const data = doc.data()
+    if (data?.createdAt && typeof data.createdAt.toDate === "function") {
+      data.createdAt = data.createdAt.toDate().toISOString()
+    }
+    return {
+      id: doc.id,
+      ...data,
+    }
+  })
   return NextResponse.json({ commerces })
 }
 
@@ -47,5 +53,5 @@ export async function POST(
     name,
     createdAt: new Date(),
   })
-  return NextResponse.json({ id: newCommerceRef.id, name, createdAt: new Date() }, { status: 201 })
+  return NextResponse.json({ id: newCommerceRef.id, name, createdAt: new Date().toISOString() }, { status: 201 })
 }

@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { ChefHat, MoreVertical } from "lucide-react"
@@ -26,10 +25,41 @@ interface CommerceCardProps {
   language: string
 }
 
+function parseSpanishDate(dateInput: any): Date {
+  const dateStr = String(dateInput)
+  const monthMap: { [key: string]: string } = {
+    "enero": "January",
+    "febrero": "February",
+    "marzo": "March",
+    "abril": "April",
+    "mayo": "May",
+    "junio": "June",
+    "julio": "July",
+    "agosto": "August",
+    "septiembre": "September",
+    "octubre": "October",
+    "noviembre": "November",
+    "diciembre": "December",
+  }
+  let replacedStr = dateStr
+  for (const [es, en] of Object.entries(monthMap)) {
+    const regex = new RegExp(es, "i")
+    if (regex.test(replacedStr)) {
+      replacedStr = replacedStr.replace(regex, en)
+      break
+    }
+  }
+  replacedStr = replacedStr.replace(/\sde\s/g, " ")
+  replacedStr = replacedStr.replace("a.m.", "AM").replace("p.m.", "PM")
+  console.log("Fecha convertida:", replacedStr)
+  return new Date(replacedStr)
+}
+
 export default function CommerceCard({ commerce, index, userId, texts, language }: CommerceCardProps) {
   const router = useRouter()
 
-  // Modificar la función handleDeleteCommerce para usar la API
+  console.log("Datos de commerce:", commerce)
+
   const handleDeleteCommerce = async (commerceId: string, e: React.MouseEvent) => {
     e.stopPropagation()
     const result = await Swal.fire({
@@ -45,13 +75,6 @@ export default function CommerceCard({ commerce, index, userId, texts, language 
 
     if (result.isConfirmed) {
       try {
-        // Comentar o eliminar la Opción 1 que usa Firestore directamente
-        /*
-        await deleteDoc(doc(db, "users", userId, "commerces", commerceId))
-        */
-
-        // Usar la API para eliminar el comercio
-        // Verificar que currentUser no sea null antes de obtener el token
         if (!authInstance.currentUser) {
           Swal.fire(texts.deleteError, "No hay usuario autenticado", "error")
           return
@@ -81,6 +104,23 @@ export default function CommerceCard({ commerce, index, userId, texts, language 
     router.push(`/user/${userId}/commerce/${commerceId}`)
   }
 
+  let createdAtDate: Date
+
+  if (commerce.createdAt) {
+    if (typeof commerce.createdAt === "object" && "seconds" in commerce.createdAt) {
+      createdAtDate = new Date(commerce.createdAt.seconds * 1000)
+    } else {
+      createdAtDate = new Date(commerce.createdAt)
+      if (isNaN(createdAtDate.getTime())) {
+        createdAtDate = parseSpanishDate(commerce.createdAt)
+      }
+    }
+  } else {
+    createdAtDate = new Date()
+  }
+
+  const isValidDate = !isNaN(createdAtDate.getTime())
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -105,7 +145,7 @@ export default function CommerceCard({ commerce, index, userId, texts, language 
         </div>
         <h3 className="text-2xl mb-3 text-gray-800">{commerce.name}</h3>
         <p className="text-gray-600 leading-relaxed">
-          {texts.created}: {new Date(commerce.createdAt.toDate()).toLocaleDateString()}
+          {texts.created}: {isValidDate ? createdAtDate.toLocaleDateString() : "Fecha no disponible"}
         </p>
       </div>
       <div
@@ -115,4 +155,3 @@ export default function CommerceCard({ commerce, index, userId, texts, language 
     </motion.div>
   )
 }
-

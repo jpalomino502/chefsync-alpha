@@ -2,7 +2,6 @@
 
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
 
 body{
     font-family: "Inter", serif;
@@ -10,24 +9,6 @@ body{
     font-weight: 300 !important;
     font-style: normal;
 }
-
-
-* {
-    box-sizing: border-box;
-    cursor: none;
-  }
-
-.cursor {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    border-radius: 50%;
-    pointer-events: none;
-    mix-blend-mode: difference;
-    transition: transform 0.1s ease-out;
-  }
-
   
 /*
 :root {

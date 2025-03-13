@@ -3,8 +3,7 @@
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Check, HelpCircle } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Check } from "lucide-react";
 
 export default function PricingSection() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
@@ -41,7 +40,7 @@ export default function PricingSection() {
   ];
 
   return (
-    <section id="pricing" ref={ref} className="py-32 bg-white dark:bg-black">
+    <section id="pricing" ref={ref} className="py-32 bg-white">
       <div className="container px-8 md:px-12 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -49,67 +48,29 @@ export default function PricingSection() {
           transition={{ duration: 0.8 }}
           className="text-center space-y-6 max-w-3xl mx-auto mb-20"
         >
-          <h2 className="text-4xl md:text-5xl  tracking-tight">
-            <span className="apple-gradient">Planes de Precios</span>
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 font-light">
-            Escoge el plan que mejor se adapte a tu negocio.
-          </p>
-
+          <h2 className="text-4xl md:text-5xl tracking-tight">Planes de Precios</h2>
+          <p className="text-xl text-gray-600 font-light">Escoge el plan que mejor se adapte a tu negocio.</p>
           <div className="flex items-center justify-center mt-8">
-            <div className="flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-full">
+            <div className="flex items-center bg-gray-100 p-1 rounded-full">
               <button
                 onClick={() => setBillingCycle("monthly")}
-                className={`px-8 py-3 rounded-full text-sm  transition-all ${
-                  billingCycle === "monthly"
-                    ? "bg-black dark:bg-white text-white dark:text-black"
-                    : "text-gray-600 dark:text-gray-300"
-                }`}
+                className={`px-8 py-3 rounded-full text-sm transition-all ${billingCycle === "monthly" ? "bg-black text-white" : "text-gray-600"}`}
               >
                 Mensual
               </button>
               <button
                 onClick={() => setBillingCycle("yearly")}
-                className={`px-8 py-3 rounded-full text-sm  transition-all ${
-                  billingCycle === "yearly"
-                    ? "bg-black dark:bg-white text-white dark:text-black"
-                    : "text-gray-600 dark:text-gray-300"
-                }`}
+                className={`px-8 py-3 rounded-full text-sm transition-all ${billingCycle === "yearly" ? "bg-black text-white" : "text-gray-600"}`}
               >
                 Anual <span className="text-xs font-normal text-pink-500">Ahorra 20%</span>
               </button>
             </div>
           </div>
         </motion.div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <TarjetaPrecio
-            titulo="Plan Básico"
-            precio={billingCycle === "monthly" ? "$39" : "$79"}
-            caracteristicas={starterFeatures}
-            esPopular={false}
-            delay={0.2}
-            isInView={isInView}
-          />
-
-          <TarjetaPrecio
-            titulo="Plan Profesional"
-            precio={billingCycle === "monthly" ? "$79" : "$159"}
-            caracteristicas={professionalFeatures}
-            esPopular={true}
-            popularLabel="Más Popular"
-            delay={0.4}
-            isInView={isInView}
-          />
-
-          <TarjetaPrecio
-            titulo="Plan Empresarial"
-            precio={billingCycle === "monthly" ? "$159" : "$319"}
-            caracteristicas={enterpriseFeatures}
-            esPopular={false}
-            delay={0.6}
-            isInView={isInView}
-          />
+          <TarjetaPrecio titulo="Plan Básico" precio={billingCycle === "monthly" ? "$39" : "$79"} caracteristicas={starterFeatures} delay={0.2} isInView={isInView} />
+          <TarjetaPrecio titulo="Plan Profesional" precio={billingCycle === "monthly" ? "$79" : "$159"} caracteristicas={professionalFeatures} esPopular popularLabel="Más Popular" delay={0.4} isInView={isInView} />
+          <TarjetaPrecio titulo="Plan Empresarial" precio={billingCycle === "monthly" ? "$159" : "$319"} caracteristicas={enterpriseFeatures} delay={0.6} isInView={isInView} />
         </div>
       </div>
     </section>
@@ -126,41 +87,22 @@ interface TarjetaPrecioProps {
   isInView: boolean;
 }
 
-function TarjetaPrecio({
-  titulo,
-  precio,
-  caracteristicas,
-  esPopular = false,
-  popularLabel = "Más Popular",
-  delay,
-  isInView,
-}: TarjetaPrecioProps) {
+function TarjetaPrecio({ titulo, precio, caracteristicas, esPopular = false, popularLabel = "Más Popular", delay, isInView }: TarjetaPrecioProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
       transition={{ duration: 0.8, delay }}
-      className={`bg-white dark:bg-black rounded-3xl overflow-hidden ${
-        esPopular ? "ring-2 ring-black dark:ring-white" : "border border-gray-200 dark:border-gray-800"
-      }`}
+      className={`bg-white rounded-3xl overflow-hidden ${esPopular ? "ring-2 ring-black" : "border border-gray-200"}`}
     >
-      {esPopular && (
-        <div className="bg-black dark:bg-white text-white dark:text-black text-center py-2 text-sm ">
-          {popularLabel}
-        </div>
-      )}
-
+      {esPopular && <div className="bg-black text-white text-center py-2 text-sm">{popularLabel}</div>}
       <div className="p-10">
-        <h3 className="text-2xl ">{titulo}</h3>
+        <h3 className="text-2xl">{titulo}</h3>
         <div className="mt-8 mb-8">
-          <span className="text-5xl ">{precio}</span>
-          <span className="text-gray-600 dark:text-gray-400 ml-2">/mes</span>
+          <span className="text-5xl">{precio}</span>
+          <span className="text-gray-600 ml-2">/mes</span>
         </div>
-
-        <Button className="w-full rounded-full h-12 bg-black dark:bg-white text-white dark:text-black">
-          Obtener ahora
-        </Button>
-
+        <Button className="w-full rounded-full h-12 bg-black text-white">Obtener ahora</Button>
         <div className="mt-10">
           <ul className="space-y-5">
             {caracteristicas.map((feature, index) => (

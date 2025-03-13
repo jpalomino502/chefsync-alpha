@@ -1,26 +1,29 @@
 "use client";
 
 import type React from "react";
-
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Check, Shield, Clock, Zap } from "lucide-react";
 import Image from "next/image";
 
 export default function WhyChooseUsSection() {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, amount: 0.2 });
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <section ref={ref} className="py-24 bg-white">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={isClient ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
           className="max-w-3xl mx-auto text-center mb-16"
         >
-          <h2 className="text-3xl tracking-tighter sm:text-4xl md:text-5xl bg-gradient-to-r from-pink-500 via-blue-500 to-purple-500 text-transparent bg-clip-text inline-block pb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl text-gray-900 dark:text-white">
             ¿Por qué elegir ChefSync?
           </h2>
           <p className="text-xl text-gray-600">
@@ -31,9 +34,9 @@ export default function WhyChooseUsSection() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+            animate={isClient ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative aspect-square"
+            className="relative w-full h-[600px]"
           >
             <Image
               src="/placeholder.svg?height=600&width=600"
@@ -46,7 +49,7 @@ export default function WhyChooseUsSection() {
 
           <motion.div
             initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
+            animate={isClient ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="space-y-8"
           >
@@ -76,16 +79,18 @@ export default function WhyChooseUsSection() {
           </motion.div>
         </div>
       </div>
-    </section> 
+    </section>
   );
 }
 
 function FeatureItem({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
     <div className="flex gap-4">
-      <div className="h-10 w-10 rounded-full bg-black flex items-center justify-center text-white shrink-0">{icon}</div>
+      <div className="h-10 w-10 rounded-full bg-black flex items-center justify-center text-white shrink-0">
+        {icon}
+      </div>
       <div>
-        <h3 className="text-xl  mb-2">{title}</h3>
+        <h3 className="text-xl mb-2">{title}</h3>
         <p className="text-gray-600">{description}</p>
       </div>
     </div>
@@ -95,9 +100,7 @@ function FeatureItem({ icon, title, description }: { icon: React.ReactNode; titl
 function StatItem({ value, label }: { value: string; label: string }) {
   return (
     <div>
-      <p className="text-4xl  bg-gradient-to-r from-pink-500 via-blue-500 to-purple-500 text-transparent bg-clip-text inline-block">
-        {value}
-      </p>
+      <p className="text-4xl text-gray-900 dark:text-white">{value}</p>
       <p className="text-gray-600 mt-2">{label}</p>
     </div>
   );

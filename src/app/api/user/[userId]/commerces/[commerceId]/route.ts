@@ -20,7 +20,11 @@ export async function GET(
   if (!commerceSnapshot.exists) {
     return NextResponse.json({ error: "Comercio no encontrado" }, { status: 404 })
   }
-  return NextResponse.json({ id: commerceSnapshot.id, ...commerceSnapshot.data() })
+  const data = commerceSnapshot.data()
+  if (data?.createdAt && typeof data.createdAt.toDate === "function") {
+    data.createdAt = data.createdAt.toDate().toISOString()
+  }
+  return NextResponse.json({ id: commerceSnapshot.id, ...data })
 }
 
 export async function PATCH(

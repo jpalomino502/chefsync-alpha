@@ -3,14 +3,16 @@ import { useEffect, useState } from "react";
 
 export default function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isTouch, setIsTouch] = useState<boolean | undefined>(undefined);
+  const [isTouch, setIsTouch] = useState<boolean | null>(null);
+  const [isMounted, setIsMounted] = useState(false); 
 
   useEffect(() => {
+    setIsMounted(true);
     setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
   useEffect(() => {
-    if (isTouch) return;
+    if (isTouch || !isMounted) return;
 
     const updatePosition = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
@@ -18,11 +20,9 @@ export default function CustomCursor() {
 
     window.addEventListener("mousemove", updatePosition);
     return () => window.removeEventListener("mousemove", updatePosition);
-  }, [isTouch]); // Dependencia añadida para evitar ejecución innecesaria
+  }, [isTouch, isMounted]);
 
-  if (isTouch === undefined) return null;
-
-  if (isTouch) return null;
+  if (!isMounted || isTouch === null || isTouch) return null;
 
   return (
     <div
