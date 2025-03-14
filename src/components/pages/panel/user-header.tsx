@@ -68,7 +68,7 @@ export default function UserHeader() {
                   </div>
                 </div>
                 <div className="py-2">
-                  <Link href={getPanelUrl()} className="flex items-center px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors text-black">
+                  <Link href={getPanelUrl()} className="flex items-center px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors ">
                     <ChefHat className="h-4 w-4 mr-2 text-gray-500" />
                     Panel de control
                   </Link>

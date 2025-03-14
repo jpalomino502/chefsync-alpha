@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useRef } from "react"
 import { motion, AnimatePresence, useInView } from "framer-motion"
 import { ChevronDown } from "lucide-react"
@@ -52,22 +51,21 @@ export default function FAQSection() {
   }
 
   return (
-    <section className="py-32 bg-black" ref={ref}>
-      <div className="container mx-auto px-8 md:px-12 max-w-7xl">
+    <section className="py-20 sm:py-32 bg-black" ref={ref}>
+      <div className="container mx-auto px-8 sm:px-12 md:px-16 max-w-7xl">
         <motion.div
-          className="text-center mb-20"
+          className="text-center mb-12 sm:mb-20"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl md:text-5xl  tracking-tight text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
             Preguntas <span className="apple-gradient">Frecuentes</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto mt-6 font-light">
+          <p className="text-base sm:text-xl text-gray-300 max-w-2xl mx-auto mt-4 font-light">
             Todo lo que necesitas saber sobre ChefSync y cómo puede transformar la operación de tu restaurante.
           </p>
         </motion.div>
-
         <div className="max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
             <motion.div
@@ -75,17 +73,15 @@ export default function FAQSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className={`mb-6 border-b border-gray-800 pb-6 ${
-                index === faqs.length - 1 ? "border-b-0" : ""
-              }`}
+              className={`mb-6 border-b border-gray-800 pb-6 ${index === faqs.length - 1 ? "border-b-0" : ""}`}
             >
               <button
-                className="flex justify-between items-center w-full text-left py-4 focus:outline-none"
+                className="flex justify-between items-center w-full text-left py-3 sm:py-4 focus:outline-none"
                 onClick={() => toggleExpand(index)}
                 aria-expanded={expandedIndex === index}
                 aria-controls={`faq-answer-${index}`}
               >
-                <h3 className="text-xl text-white">{faq.question}</h3>
+                <h3 className="text-lg sm:text-xl text-white">{faq.question}</h3>
                 <motion.div
                   animate={{ rotate: expandedIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
@@ -94,7 +90,6 @@ export default function FAQSection() {
                   <ChevronDown className="h-5 w-5 text-gray-400" />
                 </motion.div>
               </button>
-
               <AnimatePresence>
                 {expandedIndex === index && (
                   <motion.div
@@ -105,7 +100,7 @@ export default function FAQSection() {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <p className="text-gray-400 pb-4 font-light leading-relaxed">{faq.answer}</p>
+                    <p className="text-sm sm:text-base text-gray-400 pb-4 font-light leading-relaxed">{faq.answer}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -10,7 +10,6 @@ export default function Home() {
   return (
     <div className="relative">
       <Header />
-      {/* Se aplica margen negativo para que el contenido suba y quede detrás del header */}
       <div className="-mt-16">
         <Hero />
         <Features />
