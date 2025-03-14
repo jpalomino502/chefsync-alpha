@@ -33,10 +33,13 @@ export function Header() {
     if (!headerRef.current) return;
     const headerRect = headerRef.current.getBoundingClientRect();
     let detectedTheme = "black";
+
     const offset = 20;
+
     const elements = document.querySelectorAll(".white, .black");
     elements.forEach((element) => {
       const rect = element.getBoundingClientRect();
+
       if (rect.top <= headerRect.bottom + offset && rect.bottom > headerRect.top) {
         if (element.classList.contains("white")) {
           detectedTheme = "white";
@@ -49,10 +52,12 @@ export function Header() {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
       detectTheme();
     };
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         (headerRef.current && headerRef.current.contains(event.target as Node)) ||
@@ -64,9 +69,11 @@ export function Header() {
       setIsMenuOpen(false);
       setIsProfileMenuOpen(false);
     };
+
     window.addEventListener("scroll", handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
     detectTheme();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
@@ -99,10 +106,10 @@ export function Header() {
           isScrolled
             ? theme === "white"
               ? "bg-white/95 shadow-md border-transparent"
-              : "bg-black shadow-md border-transparent"
+              : "bg-black/95 shadow-md border-transparent"
             : theme === "white"
             ? "bg-white/90 border-gray-200 shadow-sm"
-            : "bg-black border-gray-700 shadow-sm"
+            : "bg-black/90 border-gray-200 shadow-sm"
         )}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex justify-between items-center h-16">
@@ -110,7 +117,7 @@ export function Header() {
             href="/"
             className={cn(
               "flex items-center space-x-2 text-xl tracking-tight transition-colors",
-              theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-gray-200"
+              theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-zinc-900"
             )}
           >
             <ChefHat className="h-6 w-6" />
@@ -121,7 +128,7 @@ export function Header() {
               href="#features"
               className={cn(
                 "text-sm relative group py-1.5 transition-colors",
-                theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-gray-200"
+                theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-zinc-900"
               )}
             >
               Características
@@ -131,7 +138,7 @@ export function Header() {
               href="#showcase"
               className={cn(
                 "text-sm relative group py-1.5 transition-colors",
-                theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-gray-200"
+                theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-zinc-900"
               )}
             >
               Ejemplos
@@ -141,7 +148,7 @@ export function Header() {
               href="#pricing"
               className={cn(
                 "text-sm relative group py-1.5 transition-colors",
-                theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-gray-200"
+                theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-zinc-900"
               )}
             >
               Precios
@@ -151,7 +158,7 @@ export function Header() {
               href="#support"
               className={cn(
                 "text-sm relative group py-1.5 transition-colors",
-                theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-gray-200"
+                theme === "white" ? "text-black hover:text-zinc-900" : "text-white hover:text-zinc-900"
               )}
             >
               Soporte
@@ -166,21 +173,16 @@ export function Header() {
                   className="flex items-center justify-center rounded-full bg-gray-200 h-10 w-10 hover:bg-gray-300 focus:outline-none transition-colors ring-offset-2 focus:ring-2 focus:ring-primary/20"
                   aria-label="Menú de usuario"
                 >
-                  <User className={cn("h-5 w-5", theme === "white" ? "text-black" : "text-white")} />
+                  <User className={cn("h-5 w-5", theme === "white" ? "text-black" : "text-black")} />
                 </button>
                 {isProfileMenuOpen && (
                   <div
                     className={cn(
                       "absolute right-0 mt-2 w-64 rounded-lg shadow-lg overflow-hidden z-20 animate-in fade-in slide-in-from-top-5 duration-200",
-                      theme === "white" ? "bg-white border-gray-100" : "bg-zinc-900 border-gray-700"
+                      theme === "white" ? "bg-white border-gray-100" : "bg-black border-gray-700"
                     )}
                   >
-                    <div
-                      className={cn(
-                        "p-4 border-b",
-                        theme === "white" ? "border-gray-100 bg-gray-50" : "border-gray-700 bg-zinc-900"
-                      )}
-                    >
+                    <div className={cn("p-4 border-b", theme === "white" ? "border-gray-100 bg-gray-50" : "border-gray-700 bg-gray-800")}>
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center overflow-hidden">
                           <User className={cn("h-6 w-6", theme === "white" ? "text-black" : "text-white")} />
@@ -197,49 +199,41 @@ export function Header() {
                       <Link
                         href={getPanelUrl()}
                         className={cn(
-                          "flex items-center px-4 py-2.5 text-sm transition-colors",
-                          theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                          "flex items-center px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors",
+                          theme === "white" ? "text-black" : "text-white"
                         )}
                         onClick={() => setIsProfileMenuOpen(false)}
                       >
-                        <ChefHat className={cn("h-4 w-4 mr-2", "text-gray-500")} />
+                        <ChefHat className={cn("h-4 w-4 mr-2", theme === "white" ? "text-gray-500" : "text-gray-500")} />
                         Panel de control
                       </Link>
                       <Link
                         href="/perfil"
                         className={cn(
-                          "flex items-center px-4 py-2.5 text-sm transition-colors",
-                          theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                          "flex items-center px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors",
+                          theme === "white" ? "text-black" : "text-white"
                         )}
                         onClick={() => setIsProfileMenuOpen(false)}
                       >
-                        <User className={cn("h-4 w-4 mr-2", "text-gray-500")} />
+                        <User className={cn("h-4 w-4 mr-2", theme === "white" ? "text-gray-500" : "text-gray-500")} />
                         Mi perfil
                       </Link>
                       <Link
                         href="/configuracion"
                         className={cn(
-                          "flex items-center px-4 py-2.5 text-sm transition-colors",
-                          theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                          "flex items-center px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors",
+                          theme === "white" ? "text-black" : "text-white"
                         )}
                         onClick={() => setIsProfileMenuOpen(false)}
                       >
-                        <Settings className={cn("h-4 w-4 mr-2", "text-gray-500")} />
+                        <Settings className={cn("h-4 w-4 mr-2", theme === "white" ? "text-gray-500" : "text-gray-500")} />
                         Configuración
                       </Link>
                     </div>
-                    <div
-                      className={cn(
-                        "py-2",
-                        theme === "white" ? "border-t border-gray-100 bg-gray-50" : "border-t border-gray-700 bg-zinc-900"
-                      )}
-                    >
+                    <div className={cn("py-2", theme === "white" ? "border-t border-gray-100 bg-gray-50" : "border-t border-gray-700 bg-gray-800")}>
                       <button
                         onClick={handleLogout}
-                        className={cn(
-                          "w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 transition-colors",
-                          theme === "white" ? "hover:bg-gray-100" : "hover:bg-zinc-800"
-                        )}
+                        className="w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-gray-100 transition-colors"
                       >
                         <LogOut className="h-4 w-4 mr-2" />
                         Cerrar sesión
@@ -250,20 +244,10 @@ export function Header() {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={cn("text-sm", theme === "white" ? "" : "bg-zinc-900 text-white border border-gray-700")}
-                  onClick={() => setIsLoginOpen(true)}
-                >
+                <Button variant="outline" size="sm" className="text-sm" onClick={() => setIsLoginOpen(true)}>
                   Iniciar sesión
                 </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  className={cn("text-sm", theme === "white" ? "" : "bg-zinc-900 text-white border border-gray-700")}
-                  onClick={() => setIsLoginOpen(true)}
-                >
+                <Button variant="default" size="sm" className="text-sm" onClick={() => setIsLoginOpen(true)}>
                   Registrarse
                 </Button>
               </div>
@@ -273,21 +257,13 @@ export function Header() {
             {user ? (
               <button
                 onClick={() => setIsProfileMenuOpen((prev) => !prev)}
-                className={cn(
-                  "flex items-center justify-center rounded-full h-8 w-8 focus:outline-none transition-colors",
-                  theme === "white" ? "bg-gray-200 hover:bg-gray-300" : "bg-zinc-800 hover:bg-zinc-700"
-                )}
+                className="flex items-center justify-center rounded-full bg-gray-200 h-8 w-8 hover:bg-gray-300 focus:outline-none transition-colors"
                 aria-label="Menú de usuario"
               >
-                <User className={cn("h-4 w-4", theme === "white" ? "text-black" : "text-white")} />
+                <User className={cn("h-4 w-4", theme === "white" ? "text-black" : "text-black")} />
               </button>
             ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                className={cn("text-xs", theme === "white" ? "" : "bg-zinc-900 text-white border border-gray-700")}
-                onClick={() => setIsLoginOpen(true)}
-              >
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => setIsLoginOpen(true)}>
                 Iniciar sesión
               </Button>
             )}
@@ -295,11 +271,7 @@ export function Header() {
               variant="ghost"
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={cn(
-                theme === "white"
-                  ? "text-black hover:text-zinc-900 hover:bg-gray-100"
-                  : "text-white hover:text-gray-200 hover:bg-zinc-800"
-              )}
+              className="text-black hover:text-zinc-900 hover:bg-gray-100"
               aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -308,19 +280,14 @@ export function Header() {
         </div>
       </header>
       {isMenuOpen && (
-        <div
-          className={cn(
-            "md:hidden fixed top-16 inset-x-0 z-50 border-t shadow-sm transition-all duration-300 ease-in-out",
-            theme === "white" ? "bg-white border-gray-100" : "bg-zinc-900 border-gray-700"
-          )}
-        >
+        <div className="md:hidden fixed top-16 inset-x-0 z-50 bg-white border-t border-gray-100 shadow-sm transition-all duration-300 ease-in-out">
           <div className="container mx-auto px-4 py-4">
             <nav className="flex flex-col space-y-1">
               <Link
                 href="#features"
                 className={cn(
-                  "text-base flex items-center px-3 py-2.5 rounded-md transition-colors",
-                  theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                  "text-base flex items-center px-3 py-2.5 transition-colors rounded-md hover:bg-gray-50",
+                  theme === "white" ? "text-black" : "text-white"
                 )}
                 onClick={closeMenu}
               >
@@ -330,8 +297,8 @@ export function Header() {
               <Link
                 href="#showcase"
                 className={cn(
-                  "text-base flex items-center px-3 py-2.5 rounded-md transition-colors",
-                  theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                  "text-base flex items-center px-3 py-2.5 transition-colors rounded-md hover:bg-gray-50",
+                  theme === "white" ? "text-black" : "text-white"
                 )}
                 onClick={closeMenu}
               >
@@ -341,8 +308,8 @@ export function Header() {
               <Link
                 href="#pricing"
                 className={cn(
-                  "text-base flex items-center px-3 py-2.5 rounded-md transition-colors",
-                  theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                  "text-base flex items-center px-3 py-2.5 transition-colors rounded-md hover:bg-gray-50",
+                  theme === "white" ? "text-black" : "text-white"
                 )}
                 onClick={closeMenu}
               >
@@ -352,8 +319,8 @@ export function Header() {
               <Link
                 href="#support"
                 className={cn(
-                  "text-base flex items-center px-3 py-2.5 rounded-md transition-colors",
-                  theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                  "text-base flex items-center px-3 py-2.5 transition-colors rounded-md hover:bg-gray-50",
+                  theme === "white" ? "text-black" : "text-white"
                 )}
                 onClick={closeMenu}
               >
@@ -369,15 +336,10 @@ export function Header() {
           ref={mobileUserMenuRef}
           className={cn(
             "md:hidden fixed right-4 top-16 w-64 rounded-lg shadow-lg overflow-hidden z-[100] animate-in fade-in slide-in-from-top-5 duration-200",
-            theme === "white" ? "bg-white border border-gray-100" : "bg-zinc-900 border border-gray-700"
+            theme === "white" ? "bg-white border border-gray-100" : "bg-black border border-gray-700"
           )}
         >
-          <div
-            className={cn(
-              "p-4 border-b",
-              theme === "white" ? "border-gray-100 bg-gray-50" : "border-gray-700 bg-zinc-900"
-            )}
-          >
+          <div className={cn("p-4 border-b", theme === "white" ? "border-gray-100 bg-gray-50" : "border-gray-700 bg-gray-800")}>
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center overflow-hidden">
                 <User className={cn("h-6 w-6", theme === "white" ? "text-black" : "text-white")} />
@@ -394,49 +356,41 @@ export function Header() {
             <Link
               href={getPanelUrl()}
               className={cn(
-                "flex items-center px-4 py-2.5 text-sm transition-colors",
-                theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                "flex items-center px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors",
+                theme === "white" ? "text-black" : "text-white"
               )}
               onClick={() => setIsProfileMenuOpen(false)}
             >
-              <ChefHat className={cn("h-4 w-4 mr-2", "text-gray-500")} />
+              <ChefHat className={cn("h-4 w-4 mr-2", theme === "white" ? "text-gray-500" : "text-gray-500")} />
               Panel de control
             </Link>
             <Link
               href="/perfil"
               className={cn(
-                "flex items-center px-4 py-2.5 text-sm transition-colors",
-                theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                "flex items-center px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors",
+                theme === "white" ? "text-black" : "text-white"
               )}
               onClick={() => setIsProfileMenuOpen(false)}
             >
-              <User className={cn("h-4 w-4 mr-2", "text-gray-500")} />
+              <User className={cn("h-4 w-4 mr-2", theme === "white" ? "text-gray-500" : "text-gray-500")} />
               Mi perfil
             </Link>
             <Link
               href="/configuracion"
               className={cn(
-                "flex items-center px-4 py-2.5 text-sm transition-colors",
-                theme === "white" ? "text-black hover:bg-gray-50" : "text-white hover:bg-zinc-800"
+                "flex items-center px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors",
+                theme === "white" ? "text-black" : "text-white"
               )}
               onClick={() => setIsProfileMenuOpen(false)}
             >
-              <Settings className={cn("h-4 w-4 mr-2", "text-gray-500")} />
+              <Settings className={cn("h-4 w-4 mr-2", theme === "white" ? "text-gray-500" : "text-gray-500")} />
               Configuración
             </Link>
           </div>
-          <div
-            className={cn(
-              "py-2",
-              theme === "white" ? "border-t border-gray-100 bg-gray-50" : "border-t border-gray-700 bg-zinc-900"
-            )}
-          >
+          <div className={cn("py-2", theme === "white" ? "border-t border-gray-100 bg-gray-50" : "border-t border-gray-700 bg-gray-800")}>
             <button
               onClick={handleLogout}
-              className={cn(
-                "w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 transition-colors",
-                theme === "white" ? "hover:bg-gray-100" : "hover:bg-zinc-800"
-              )}
+              className="w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-gray-100 transition-colors"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Cerrar sesión
