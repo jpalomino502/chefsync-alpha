@@ -7,7 +7,6 @@ import { motion } from "framer-motion"
 import Swal from "sweetalert2"
 import { auth } from "@/services/firebase"
 
-// Cambiar los textos para que solo estén en español
 const texts = {
   newCommerce: "Nuevo Comercio",
   commerceName: "Nombre del comercio",
@@ -26,11 +25,9 @@ interface AddCommerceModalProps {
   language?: string
 }
 
-// Eliminar la referencia a t y usar texts directamente
 export default function AddCommerceModal({ isOpen, setIsOpen, userId, language }: AddCommerceModalProps) {
   const [newCommerce, setNewCommerce] = useState("")
 
-  // Modificar la función handleAddCommerce para usar la API
   const handleAddCommerce = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newCommerce.trim()) return
@@ -50,17 +47,6 @@ export default function AddCommerceModal({ isOpen, setIsOpen, userId, language }
 
     if (result.isConfirmed) {
       try {
-        // Comentar o eliminar la Opción 1 que usa Firestore directamente
-        /*
-        const commercesRef = collection(db, "users", userId, "commerces")
-        await addDoc(commercesRef, {
-          name: newCommerce,
-          createdAt: new Date(),
-        })
-        */
-
-        // Usar la API para crear el comercio
-        // Verificar que currentUser no sea null antes de obtener el token
         if (!auth.currentUser) {
           Swal.fire("Error", "No hay usuario autenticado", "error")
           return
@@ -92,7 +78,6 @@ export default function AddCommerceModal({ isOpen, setIsOpen, userId, language }
     }
   }
 
-  // Cambiar todas las referencias a t por texts en el JSX
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-screen items-center justify-center px-4">

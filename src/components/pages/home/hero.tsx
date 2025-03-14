@@ -6,7 +6,7 @@ export function Hero() {
   const containerRef = useRef(null)
 
   return (
-    <section ref={containerRef} className="w-full h-screen flex items-center justify-center bg-white overflow-hidden">
+    <section ref={containerRef} className="w-full white h-screen flex items-center justify-center bg-white overflow-hidden">
       <div className="text-center space-y-6">
         <div className="space-y-2">
           <h1 className="text-3xl tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">

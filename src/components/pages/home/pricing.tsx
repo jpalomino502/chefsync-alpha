@@ -40,7 +40,7 @@ export default function PricingSection() {
   ];
 
   return (
-    <section id="pricing" ref={ref} className="py-32 bg-white">
+    <section id="pricing" ref={ref} className="py-32 white bg-white">
       <div className="container px-8 md:px-12 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

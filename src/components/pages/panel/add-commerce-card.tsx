@@ -3,7 +3,6 @@
 import { motion } from "framer-motion"
 import { PlusCircle } from "lucide-react"
 
-// Cambiar la interfaz para usar texts en lugar de t
 interface AddCommerceCardProps {
   texts: {
     addCommerce: string
@@ -13,7 +12,6 @@ interface AddCommerceCardProps {
 }
 
 export default function AddCommerceCard({ texts, onClick }: AddCommerceCardProps) {
-  // Cambiar todas las referencias a t por texts
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

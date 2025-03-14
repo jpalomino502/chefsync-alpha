@@ -5,7 +5,6 @@ import CommerceCard from "./commerce-card"
 import AddCommerceCard from "./add-commerce-card"
 import AddCommerceModal from "./add-commerce-modal"
 
-// Cambiar los textos para que solo estén en español
 const texts = {
   addCommerce: "Agregar Comercio",
   addCommerceDescription: "Crea un nuevo comercio para gestionar",
@@ -18,7 +17,6 @@ const texts = {
   deleteError: "Error",
 }
 
-// Eliminar la referencia a language en la interfaz y en el componente
 interface CommerceListProps {
   commerces: any[]
   userId: string
@@ -28,7 +26,6 @@ interface CommerceListProps {
 export default function CommerceList({ commerces, userId, language }: CommerceListProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Eliminar la referencia a t y usar texts directamente
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -141,9 +141,9 @@ export default function CommerceCard({ commerce, index, userId, texts, language 
           className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
           style={{ backgroundColor: "#d5edd9" }}
         >
-          <ChefHat size={32} className="text-gray-800" />
+          <ChefHat size={32} className="text-black" />
         </div>
-        <h3 className="text-2xl mb-3 text-gray-800">{commerce.name}</h3>
+        <h3 className="text-2xl mb-3 text-black">{commerce.name}</h3>
         <p className="text-gray-600 leading-relaxed">
           {texts.created}: {isValidDate ? createdAtDate.toLocaleDateString() : "Fecha no disponible"}
         </p>
