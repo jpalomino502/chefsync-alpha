@@ -1,14 +1,21 @@
 "use client"
-import { useState } from "react"
+import React, { useState } from "react"
 import Link from "next/link"
-import { ChefHat, User, LogOut, Settings } from "lucide-react"
+import { ChefHat, User, LogOut } from "lucide-react"
 
-const PanelHeader = ({ handleLogout, texts }) => {
+interface PanelHeaderProps {
+  handleLogout: () => void
+  texts: {
+    logout: string
+  }
+}
+
+const PanelHeader: React.FC<PanelHeaderProps> = ({ handleLogout, texts }) => {
   const [showUserMenu, setShowUserMenu] = useState(false)
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md border-b">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-        <Link href="/">
+        <Link href="/panel">
           <div className="flex items-center space-x-2">
             <ChefHat className="h-6 w-6 text-black" />
             <span className="text-xl font-bold text-black">ChefSync</span>

@@ -1,8 +1,28 @@
 "use client"
+import React from "react"
 import { MoreVertical, ChefHat } from "lucide-react"
-const CommerceCard = ({ commerce, onDelete, onSelect, texts }) => {
+
+interface Commerce {
+  id: string
+  name: string
+  createdAt: any
+}
+
+interface CommerceCardProps {
+  commerce: Commerce
+  onDelete: (id: string, e: React.MouseEvent<HTMLButtonElement>) => void
+  onSelect: (id: string) => void
+  texts: {
+    created: string
+  }
+}
+
+const CommerceCard: React.FC<CommerceCardProps> = ({ commerce, onDelete, onSelect, texts }) => {
   return (
-    <div onClick={() => onSelect(commerce.id)} className="group relative overflow-hidden rounded-3xl p-8 bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-2 cursor-pointer">
+    <div
+      onClick={() => onSelect(commerce.id)}
+      className="group relative overflow-hidden rounded-3xl p-8 bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-2 cursor-pointer"
+    >
       <button onClick={(e) => onDelete(commerce.id, e)} className="absolute top-4 right-2 text-gray-500 hover:text-gray-700 z-20">
         <MoreVertical size={24} />
       </button>
@@ -16,8 +36,12 @@ const CommerceCard = ({ commerce, onDelete, onSelect, texts }) => {
           {texts.created}: {new Date(commerce.createdAt.toDate()).toLocaleDateString()}
         </p>
       </div>
-      <div className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-20 transition-opacity duration-300 group-hover:opacity-100" style={{ backgroundColor: "#d5edd9" }}></div>
+      <div
+        className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-20 transition-opacity duration-300 group-hover:opacity-100"
+        style={{ backgroundColor: "#d5edd9" }}
+      ></div>
     </div>
   )
 }
+
 export default CommerceCard
