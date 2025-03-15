@@ -1,5 +1,14 @@
+"use client"
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  sendPasswordResetEmail,
+} from "firebase/auth"
+import { auth } from "@/services/firebase"
 
 type AuthStatus = "idle" | "loading" | "success" | "error"
 
@@ -12,25 +21,29 @@ export function useAuthActions() {
     try {
       setStatus("loading")
       setError(null)
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      })
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || "Error al iniciar sesión")
+
+      // Use Firebase authentication directly
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+
+      // Store user data in localStorage (this will be redundant with auth-context,
+      // but ensures backward compatibility with existing code)
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        name: user.displayName,
+        photoURL: user.photoURL,
       }
-      localStorage.setItem("user", JSON.stringify(data.user))
+      localStorage.setItem("user", JSON.stringify(userData))
+
       setStatus("success")
-      router.refresh()
-      return data
+      // No need to call router.refresh() as the auth context will update automatically
+      return { user: userData }
     } catch (err: any) {
       setStatus("error")
-      setError(err.message)
-      throw err
+      const errorMessage = err.message || "Error al iniciar sesión"
+      setError(errorMessage)
+      throw new Error(errorMessage)
     }
   }
 
@@ -38,25 +51,32 @@ export function useAuthActions() {
     try {
       setStatus("loading")
       setError(null)
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      })
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || "Error al registrarse")
+
+      // Use Firebase authentication directly
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+
+      // Update profile with name if provided
+      // Note: You might need to import updateProfile from firebase/auth
+      // and call it here to set the displayName
+
+      // Store user data in localStorage
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        name: name, // Use the provided name
+        photoURL: user.photoURL,
       }
-      localStorage.setItem("user", JSON.stringify(data.user))
+      localStorage.setItem("user", JSON.stringify(userData))
+
       setStatus("success")
-      router.refresh()
-      return data
+      // No need to call router.refresh() as the auth context will update automatically
+      return { user: userData }
     } catch (err: any) {
       setStatus("error")
-      setError(err.message)
-      throw err
+      const errorMessage = err.message || "Error al registrarse"
+      setError(errorMessage)
+      throw new Error(errorMessage)
     }
   }
 
@@ -64,23 +84,17 @@ export function useAuthActions() {
     try {
       setStatus("loading")
       setError(null)
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      })
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || "Error al enviar el correo de restablecimiento")
-      }
+
+      // Use Firebase password reset
+      await sendPasswordResetEmail(auth, email)
+
       setStatus("success")
-      return data
+      return { success: true }
     } catch (err: any) {
       setStatus("error")
-      setError(err.message)
-      throw err
+      const errorMessage = err.message || "Error al enviar el correo de restablecimiento"
+      setError(errorMessage)
+      throw new Error(errorMessage)
     }
   }
 
@@ -88,21 +102,21 @@ export function useAuthActions() {
     try {
       setStatus("loading")
       setError(null)
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-      })
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || "Error al cerrar sesión")
-      }
+
+      // Use Firebase signOut
+      await signOut(auth)
+
+      // Clear localStorage
       localStorage.removeItem("user")
+
       setStatus("success")
-      router.refresh()
-      return data
+      // No need to call router.refresh() as the auth context will update automatically
+      return { success: true }
     } catch (err: any) {
       setStatus("error")
-      setError(err.message)
-      throw err
+      const errorMessage = err.message || "Error al cerrar sesión"
+      setError(errorMessage)
+      throw new Error(errorMessage)
     }
   }
 
@@ -116,3 +130,4 @@ export function useAuthActions() {
     isLoading: status === "loading",
   }
 }
+
