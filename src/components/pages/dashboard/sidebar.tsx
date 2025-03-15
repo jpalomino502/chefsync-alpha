@@ -1,12 +1,36 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutGrid, Book, Utensils, DollarSign, LogOut, X, ChefHat, PanelLeft, Settings } from "lucide-react";
+import {
+  LayoutGrid,
+  Book,
+  Utensils,
+  DollarSign,
+  LogOut,
+  X,
+  ChefHat,
+  PanelLeft,
+  Settings,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/services/firebase";
+import { textos } from "@/constants/texts";
+
+interface SidebarTexts {
+  summary: string;
+  menu: string;
+  command: string;
+  bill: string;
+  configApp: string;
+  myPanel: string;
+  cerrarSesion: string;
+  appName: string;
+}
 
 function useWindowWidth() {
-  const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1024
+  );
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
@@ -15,24 +39,14 @@ function useWindowWidth() {
   return width;
 }
 
-const textos = {
-  es: {
-    summary: "Resumen",
-    menu: "Menú",
-    command: "Comanda",
-    bill: "Cuenta",
-    ConfigApp: "Configuración",
-    myPanel: "Mi Panel",
-    cerrarSesion: "Cerrar sesión"
-  }
-};
+type NavItemLabel = keyof SidebarTexts;
 
-const navItems = [
+const navItems: { icon: React.ElementType; label: NavItemLabel; id: string }[] = [
   { icon: LayoutGrid, label: "summary", id: "Summary" },
   { icon: Utensils, label: "menu", id: "Menu" },
   { icon: Book, label: "command", id: "Command" },
   { icon: DollarSign, label: "bill", id: "Bill" },
-  { icon: Settings, label: "ConfigApp", id: "ConfigApp" }
+  { icon: Settings, label: "configApp", id: "ConfigApp" },
 ];
 
 interface NavItemProps {
@@ -42,9 +56,14 @@ interface NavItemProps {
   onClick: () => void;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, active, onClick }) => {
+const NavItem = ({ icon: Icon, label, active, onClick }: NavItemProps) => {
   return (
-    <button className={`flex w-full items-center gap-5 rounded-2xl p-4 text-base transition-all duration-300 ease-in-out ${active ? "text-white bg-white/8" : "text-white/60 hover:bg-white/5 hover:text-white"}`} onClick={onClick}>
+    <button
+      className={`flex w-full items-center gap-5 rounded-2xl p-4 text-base transition-all duration-300 ease-in-out ${
+        active ? "text-white bg-white/8" : "text-white/60 hover:bg-white/5 hover:text-white"
+      }`}
+      onClick={onClick}
+    >
       <Icon className="h-6 w-6 shrink-0 ml-[6px]" />
       <span className="truncate whitespace-nowrap">{label}</span>
     </button>
@@ -58,27 +77,42 @@ interface SidebarProps {
   setActiveView: (view: string) => void;
   setIsSidebarOpen: (open: boolean) => void;
   activeView: string;
-  language?: keyof typeof textos;
   allowedModules: string[];
+  language?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ currentUser, isOpen, closeSidebar, setActiveView, setIsSidebarOpen, activeView, language = "es", allowedModules }) => {
+const Sidebar = ({
+  currentUser,
+  isOpen,
+  closeSidebar,
+  setActiveView,
+  setIsSidebarOpen,
+  activeView,
+  allowedModules,
+  language = "es",
+}: SidebarProps) => {
   const router = useRouter();
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < 1024;
-  const t = textos[language];
-  const filteredNavItems = allowedModules ? navItems.filter(item => allowedModules.includes(item.id)) : navItems;
-  const isEmpleado = !currentUser;
+  const validLanguages = ["es", "en"];
+  const selectedLanguage = validLanguages.includes(language) ? language : "es";
+  const t: SidebarTexts = textos.sidebar;
+
+  const filteredNavItems = allowedModules
+    ? navItems.filter((item) => allowedModules.includes(item.id))
+    : navItems;
+
+  const isEmployee = !currentUser;
 
   const handleGoToPanel = () => {
-    const uid = currentUser?.uid || auth.currentUser?.uid;
+    const uid = currentUser?.uid;
     if (uid) {
       router.push(`/panel/${uid}`);
       closeSidebar();
     }
   };
 
-  const handleLogoutEmpleado = () => {
+  const handleLogoutEmployee = () => {
     const session = localStorage.getItem("employeeSession");
     localStorage.removeItem("employeeSession");
     if (session) {
@@ -89,8 +123,15 @@ const Sidebar: React.FC<SidebarProps> = ({ currentUser, isOpen, closeSidebar, se
     }
   };
 
-  const mobileVariants = { open: { x: 0 }, closed: { x: -320 } };
-  const desktopVariants = { open: { width: 320 }, closed: { width: 100 } };
+  const mobileVariants = {
+    open: { x: 0 },
+    closed: { x: -320 },
+  };
+
+  const desktopVariants = {
+    open: { width: 320 },
+    closed: { width: 100 },
+  };
 
   return (
     <motion.div
@@ -107,20 +148,26 @@ const Sidebar: React.FC<SidebarProps> = ({ currentUser, isOpen, closeSidebar, se
         <div className="flex h-24 items-center justify-between px-6">
           <div className="flex items-center pl-2 gap-2">
             <ChefHat className="h-6 w-6 text-white ml-[6px]" />
-            <span className={`text-white font-semibold text-xl truncate whitespace-nowrap transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}>
-              ChefSync
+            <span
+              className={`text-white font-semibold text-xl truncate whitespace-nowrap transition-opacity duration-300 ${
+                isOpen ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              {t.appName || "ChefSync"}
             </span>
           </div>
-          <button onClick={closeSidebar} className="lg:hidden text-white hover:text-gray-300">
-            <X className="h-6 w-6" />
-          </button>
+          {isMobile && (
+            <button onClick={closeSidebar} className="lg:hidden text-white hover:text-gray-300">
+              <X className="h-6 w-6" />
+            </button>
+          )}
         </div>
         <nav className="flex flex-1 flex-col justify-center gap-3 px-4">
           {filteredNavItems.map((item) => (
             <NavItem
               key={item.id}
               icon={item.icon}
-              label={t[item.label as keyof typeof t]}
+              label={t[item.label] || item.label}
               active={item.id === activeView}
               onClick={() => {
                 setActiveView(item.id);
@@ -130,10 +177,20 @@ const Sidebar: React.FC<SidebarProps> = ({ currentUser, isOpen, closeSidebar, se
           ))}
         </nav>
         <div className="px-4 pb-4">
-          {isEmpleado ? (
-            <NavItem icon={LogOut} label={"Cerrar sesión"} onClick={handleLogoutEmpleado} active={false} />
+          {isEmployee ? (
+            <NavItem
+              icon={LogOut}
+              label={t.cerrarSesion || "Cerrar sesión"}
+              onClick={handleLogoutEmployee}
+              active={false}
+            />
           ) : (
-            <NavItem icon={PanelLeft} label={t.myPanel} onClick={handleGoToPanel} active={false} />
+            <NavItem
+              icon={PanelLeft}
+              label={t.myPanel || "Mi Panel"}
+              onClick={handleGoToPanel}
+              active={false}
+            />
           )}
         </div>
       </div>

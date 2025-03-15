@@ -1,26 +1,32 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Sidebar from "@/components/pages/dashboard/sidebar";
 import Header from "@/components/pages/dashboard/header";
-import Summary from "@/components/pages/dashboard/summary";
-import Menu from "@/components/pages/dashboard/menu";
-import Command from "@/components/pages/dashboard/command";
-import Bill from "@/components/pages/dashboard/bill";
-import ConfigApp from "@/components/pages/dashboard/configApp";
+import { Summary } from "@/components/pages/dashboard/summary";
+import { textos } from "@/constants/texts";
 
-const Dashboard = () => {
+const Menu = ({ commerceId }: { commerceId: string }) => <div>Menu Component</div>;
+const Command = ({ commerceId }: { commerceId: string }) => <div>Command Component</div>;
+const Bill = ({ commerceId }: { commerceId: string }) => <div>Bill Component</div>;
+const ConfigApp = ({ commerceId }: { commerceId: string }) => <div>ConfigApp Component</div>;
+
+export default function Dashboard() {
   const { userId, commerceId } = useParams();
   const router = useRouter();
   const [activeView, setActiveView] = useState("Summary");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [allowedModules, setAllowedModules] = useState<string[]>([]);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const t = textos.sidebar;
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      const currentUser = JSON.parse(storedUser);
-      if (currentUser.uid !== userId) router.push("*");
+      const user = JSON.parse(storedUser);
+      if (user.uid !== userId) router.push("/");
+      setCurrentUser(user);
       setAllowedModules(["Summary", "Menu", "Command", "Bill", "ConfigApp"]);
     } else {
       const session = localStorage.getItem("employeeSession");
@@ -37,44 +43,46 @@ const Dashboard = () => {
     localStorage.setItem("activeView", activeView);
   }, [activeView]);
 
+  const commerceIdStr = Array.isArray(commerceId) ? commerceId[0] : (commerceId as string);
+
+  const getPageTitle = () => {
+    switch (activeView) {
+      case "Summary":
+        return t.summary;
+      case "Menu":
+        return t.menu;
+      case "Command":
+        return t.command;
+      case "Bill":
+        return t.bill;
+      case "ConfigApp":
+        return t.configApp;
+      default:
+        return "";
+    }
+  };
+
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
-  const commerceIdStr = Array.isArray(commerceId) ? commerceId[0] : commerceId;
 
   return (
     <div className="relative bg-black h-screen overflow-hidden">
       <Sidebar
-        currentUser={JSON.parse(localStorage.getItem("user") || "null")}
+        currentUser={currentUser}
         isOpen={isSidebarOpen}
         closeSidebar={closeSidebar}
         setActiveView={setActiveView}
         setIsSidebarOpen={setIsSidebarOpen}
         activeView={activeView}
-        language="es"
         allowedModules={allowedModules}
       />
-      <Header
-        toggleSidebar={toggleSidebar}
-        pageTitle={
-          activeView === "Summary"
-            ? "Resumen"
-            : activeView === "Menu"
-            ? "Menú"
-            : activeView === "Command"
-            ? "Comanda"
-            : activeView === "Bill"
-            ? "Cuenta"
-            : activeView === "ConfigApp"
-            ? "Configuración"
-            : ""
-        }
-      />
+      <Header toggleSidebar={toggleSidebar} pageTitle={getPageTitle()} />
       <div
         className={`flex flex-col h-screen pt-16 lg:pt-0 transition-all duration-300 ease-in-out ${
           isSidebarOpen ? "lg:ml-[320px]" : "lg:ml-[100px]"
         }`}
       >
-        <main className="flex-1 overflow-auto bg-white lg:rounded-2xl lg:my-2 lg:mr-2">
+        <main className="flex-1 no-scrollbar overflow-auto bg-white lg:rounded-2xl lg:my-2 lg:mr-2">
           <div className="h-full w-full container mx-auto p-4">
             {activeView === "Summary" && <Summary commerceId={commerceIdStr} />}
             {activeView === "Menu" && <Menu commerceId={commerceIdStr} />}
@@ -92,6 +100,4 @@ const Dashboard = () => {
       )}
     </div>
   );
-};
-
-export default Dashboard;
+}
