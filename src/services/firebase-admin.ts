@@ -13,6 +13,7 @@ if (!getApps().length) {
   });
 }
 
-export const adminAuth = getAuth();
 export const db = getFirestore();
-export default admin
+const adminAuth = admin.auth()
+
+export { adminAuth }

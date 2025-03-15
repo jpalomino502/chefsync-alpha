@@ -27,13 +27,13 @@ const texts = {
   deleteConfirmText: "Sí, eliminar!",
   deleteCancelText: "Cancelar",
   deleteSuccess: "Eliminado!",
-  deleteError: "Error",
+  deleteError: "Error"
 };
 
 interface Commerce {
   id: string;
   name: string;
-  createdAt?: Date;
+  createdAt: Date;
 }
 
 export default function UserPanel() {
@@ -46,17 +46,19 @@ export default function UserPanel() {
 
   useEffect(() => {
     if (!userId) return;
-
     const commercesRef = collection(db, "users", userId, "commerces");
     const unsubscribe = onSnapshot(commercesRef, (snapshot) => {
-      const commercesList = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Commerce[];
+      const commercesList = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name,
+          createdAt: data.createdAt ? data.createdAt.toDate() : new Date()
+        };
+      }) as Commerce[];
       setCommerces(commercesList);
       setLoading(false);
     });
-
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
@@ -66,14 +68,12 @@ export default function UserPanel() {
     } else {
       router.push("/");
     }
-
     return () => unsubscribe();
   }, [userId, router]);
 
   const handleAddCommerce = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCommerce.trim()) return;
-
     const creationMessage = `¿Deseas crear el comercio "${newCommerce}"?`;
     const result = await Swal.fire({
       title: texts.deleteConfirmation,
@@ -83,9 +83,8 @@ export default function UserPanel() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: texts.deleteConfirmText,
-      cancelButtonText: texts.deleteCancelText,
+      cancelButtonText: texts.deleteCancelText
     });
-
     if (result.isConfirmed) {
       try {
         const commercesRef = collection(db, "users", userId, "commerces");
@@ -109,9 +108,8 @@ export default function UserPanel() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: texts.deleteConfirmText,
-      cancelButtonText: texts.deleteCancelText,
+      cancelButtonText: texts.deleteCancelText
     });
-
     if (result.isConfirmed) {
       try {
         await deleteDoc(doc(db, "users", userId, "commerces", commerceId));
@@ -138,29 +136,12 @@ export default function UserPanel() {
     <div className="min-h-screen bg-white relative overflow-hidden">
       <PanelHeader handleLogout={handleLogout} texts={texts} />
       <main className="container mx-auto px-6 lg:px-40 py-20">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-5xl mb-8 text-black text-center"
-        >
+        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-5xl mb-8 text-black text-center">
           {texts.title}
         </motion.h2>
-        <CommerceGrid
-          commerces={commerces}
-          onSelect={handleSelectCommerce}
-          onDelete={handleDeleteCommerce}
-          openModal={() => setIsModalOpen(true)}
-          texts={texts}
-        />
+        <CommerceGrid commerces={commerces} onSelect={handleSelectCommerce} onDelete={handleDeleteCommerce} openModal={() => setIsModalOpen(true)} texts={texts} />
       </main>
-      <AddCommerceModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onAddCommerce={handleAddCommerce}
-        newCommerce={newCommerce}
-        setNewCommerce={setNewCommerce}
-        texts={texts}
-      />
+      <AddCommerceModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddCommerce={handleAddCommerce} newCommerce={newCommerce} setNewCommerce={setNewCommerce} texts={texts} />
     </div>
   );
 }
