@@ -18,6 +18,11 @@ interface CommerceCardProps {
 }
 
 const CommerceCard: React.FC<CommerceCardProps> = ({ commerce, onDelete, onSelect, texts }) => {
+  // Convertir createdAt en una fecha válida
+  const createdAtDate = commerce.createdAt?.toDate
+    ? commerce.createdAt.toDate()
+    : new Date(commerce.createdAt);
+
   return (
     <div
       onClick={() => onSelect(commerce.id)}
@@ -33,7 +38,7 @@ const CommerceCard: React.FC<CommerceCardProps> = ({ commerce, onDelete, onSelec
         </div>
         <h3 className="text-2xl mb-3 text-gray-800">{commerce.name}</h3>
         <p className="text-gray-600 leading-relaxed">
-          {texts.created}: {new Date(commerce.createdAt.toDate()).toLocaleDateString()}
+          {texts.created}: {createdAtDate.toLocaleDateString()}
         </p>
       </div>
       <div

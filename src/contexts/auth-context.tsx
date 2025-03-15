@@ -1,38 +1,40 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { createContext, useContext, useEffect, useState } from "react"
-import { onAuthStateChanged, type User } from "firebase/auth"
-import { auth } from "@/services/firebase"
+import type React from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { auth } from "@/services/firebase";
 
 type AuthContextType = {
-  user: User | null
-  loading: boolean
-}
+  user: User | null;
+  loading: boolean;
+};
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-})
+});
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    console.log("Setting up auth state listener")
+    setHydrated(true);
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("Auth state changed:", user ? "User logged in" : "No user")
-      setUser(user)
-      setLoading(false)
-    })
+      console.log("Estado de autenticación cambiado:", user ? "Usuario conectado" : "Sin usuario");
+      setUser(user);
+      setLoading(false);
+    });
 
-    return () => unsubscribe()
-  }, [])
+    return () => unsubscribe();
+  }, []);
 
-  return <AuthContext.Provider value={{ user, loading }}>{children}</AuthContext.Provider>
-}
+  if (!hydrated) return null;
 
-export const useAuth = () => useContext(AuthContext)
+  return <AuthContext.Provider value={{ user, loading }}>{children}</AuthContext.Provider>;
+};
 
+export const useAuth = () => useContext(AuthContext);

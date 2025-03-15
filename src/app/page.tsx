@@ -11,7 +11,7 @@ export default function Home() {
     <div className="relative">
       <Header />
       <div className="-mt-16">
-        <Hero />
+       <Hero />
         <Features />
         <WhyChooseUs />
         <FreeTrial />

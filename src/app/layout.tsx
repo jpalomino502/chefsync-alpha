@@ -21,6 +21,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  console.log("RootLayout rendered on:", typeof window === "undefined" ? "Server" : "Client");
+
   return (
     <html lang="es">
       <body className={`${inter.variable} antialiased`}>
@@ -32,3 +34,4 @@ export default function RootLayout({
     </html>
   );
 }
+
