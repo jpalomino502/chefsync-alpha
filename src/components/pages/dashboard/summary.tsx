@@ -1,76 +1,76 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { EarningsChart } from "./summary/earnings-chart"
-import { OrderStatusCards } from "./summary/order-status-cards"
-import { RecentOrders } from "./summary/recent-orders"
-import { textos } from "@/constants/texts"
+import * as React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EarningsChart } from "./summary/earnings-chart";
+import { OrderStatusCards } from "./summary/order-status-cards";
+import { RecentOrders } from "./summary/recent-orders";
+import { textos } from "@/constants/texts";
 
 interface SummaryProps {
-  commerceId: string
+  commerceId: string;
 }
 
 export function Summary({ commerceId }: SummaryProps) {
-  const [earningsData, setEarningsData] = React.useState({ chartData: [], totalEarnings: 0 })
-  const [orderStats, setOrderStats] = React.useState({ totalOrders: 0, pendingOrders: 0, completedOrders: 0 })
-  const [recentOrders, setRecentOrders] = React.useState([])
-  const [loading, setLoading] = React.useState(true)
-  const t = textos.summary
+  const [earningsData, setEarningsData] = React.useState({ chartData: [], totalEarnings: 0 });
+  const [orderStats, setOrderStats] = React.useState({ totalOrders: 0, pendingOrders: 0, completedOrders: 0 });
+  const [recentOrders, setRecentOrders] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const t = textos.summary;
 
   React.useEffect(() => {
     if (commerceId) {
-      fetchData()
+      fetchData();
     }
-  }, [commerceId])
+  }, [commerceId]);
 
   const fetchData = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const userId =
         JSON.parse(localStorage.getItem("user") || "{}")?.uid ||
-        JSON.parse(localStorage.getItem("employeeSession") || "{}")?.userId
+        JSON.parse(localStorage.getItem("employeeSession") || "{}")?.userId;
 
       const [earningsResponse, statsResponse, ordersResponse] = await Promise.all([
         fetch(`/api/dashboard/earnings?commerceId=${commerceId}&userId=${userId}`),
         fetch(`/api/dashboard/order-stats?commerceId=${commerceId}&userId=${userId}`),
         fetch(`/api/dashboard/recent-orders?commerceId=${commerceId}&userId=${userId}`),
-      ])
+      ]);
 
       if (!earningsResponse.ok || !statsResponse.ok || !ordersResponse.ok) {
-        throw new Error("Failed to fetch data")
+        throw new Error("Failed to fetch data");
       }
 
       const [earnings, stats, orders] = await Promise.all([
         earningsResponse.json(),
         statsResponse.json(),
         ordersResponse.json(),
-      ])
+      ]);
 
-      setEarningsData(earnings)
-      setOrderStats(stats)
-      setRecentOrders(orders)
+      setEarningsData(earnings);
+      setOrderStats(stats);
+      setRecentOrders(orders);
     } catch (error) {
-      console.error("Error fetching data:", error)
-      setEarningsData({ chartData: [], totalEarnings: 0 })
-      setOrderStats({ totalOrders: 0, pendingOrders: 0, completedOrders: 0 })
-      setRecentOrders([])
+      console.error("Error fetching data:", error);
+      setEarningsData({ chartData: [], totalEarnings: 0 });
+      setOrderStats({ totalOrders: 0, pendingOrders: 0, completedOrders: 0 });
+      setRecentOrders([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl md:text-4xl font-bold">{t.greeting}</h1>
+    <div className="min-h-screen p-4 md:p-8">
+      <h1 className="text-3xl md:text-4xl">{t.greeting}</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-7 gap-6">
         <div className="md:col-span-3">
-          <h2 className="text-2xl font-semibold mb-3">{t.earnings}</h2>
+          <h2 className="text-2xl mb-3">{t.earnings}</h2>
           <EarningsChart data={earningsData.chartData} totalEarnings={earningsData.totalEarnings} loading={loading} />
         </div>
         <div className="md:col-span-4 flex flex-col">
-          <h2 className="text-2xl font-semibold mb-3">{t.orderStatus}</h2>
+          <h2 className="text-2xl mb-3">{t.orderStatus}</h2>
           <OrderStatusCards stats={orderStats} loading={loading} />
         </div>
       </div>
@@ -92,6 +92,5 @@ export function Summary({ commerceId }: SummaryProps) {
         </Card>
       </div>
     </div>
-  )
+  );
 }
-

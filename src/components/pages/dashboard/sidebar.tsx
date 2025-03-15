@@ -149,7 +149,7 @@ const Sidebar = ({
           <div className="flex items-center pl-2 gap-2">
             <ChefHat className="h-6 w-6 text-white ml-[6px]" />
             <span
-              className={`text-white font-semibold text-xl truncate whitespace-nowrap transition-opacity duration-300 ${
+              className={`text-white text-xl truncate whitespace-nowrap transition-opacity duration-300 ${
                 isOpen ? "opacity-100" : "opacity-0"
               }`}
             >

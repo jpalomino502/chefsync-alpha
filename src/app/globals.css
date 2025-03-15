@@ -7,3 +7,12 @@ body{
     font-weight: 300 !important;
     font-style: normal;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
